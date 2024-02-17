@@ -1,6 +1,7 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:skill_test/models/skill_master.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,6 +31,8 @@ class SkillTestPage extends StatefulWidget {
 }
 
 class _SkillTestPageState extends State<SkillTestPage> {
+  SkillMaster skillMaster = SkillMaster();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,8 +47,10 @@ class _SkillTestPageState extends State<SkillTestPage> {
                 child: Padding(
                   padding: EdgeInsets.all(15),
                   child: Text(
-                    'Question Container',
+                    skillMaster.getQuestionMasterText() ?? '00',
                     textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 24,
@@ -55,6 +60,7 @@ class _SkillTestPageState extends State<SkillTestPage> {
               ),
             ),
             Expanded(
+              flex: 1,
               child: Padding(
                 padding: EdgeInsets.all(15),
                 child: Container(
@@ -63,7 +69,16 @@ class _SkillTestPageState extends State<SkillTestPage> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        if (skillMaster.getQuestionMasterAnswer() == true) {
+                          skillMaster.addRightWidget();
+                        } else {
+                          skillMaster.addWrongWidget();
+                        }
+                        skillMaster.nextQuestion();
+                      });
+                    },
                     child: Text(
                       'True',
                       style: TextStyle(
@@ -76,6 +91,7 @@ class _SkillTestPageState extends State<SkillTestPage> {
               ),
             ),
             Expanded(
+              flex: 1,
               child: Padding(
                 padding: EdgeInsets.all(15),
                 child: Container(
@@ -84,7 +100,16 @@ class _SkillTestPageState extends State<SkillTestPage> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        if (skillMaster.getQuestionMasterAnswer() == false) {
+                          skillMaster.addRightWidget();
+                        } else {
+                          skillMaster.addWrongWidget();
+                        }
+                        skillMaster.nextQuestion();
+                      });
+                    },
                     child: Text(
                       'False',
                       style: TextStyle(
@@ -94,6 +119,12 @@ class _SkillTestPageState extends State<SkillTestPage> {
                     ),
                   ),
                 ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Row(
+                children: skillMaster.getWidgetList(),
               ),
             ),
           ],
